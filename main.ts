@@ -3,21 +3,23 @@ import { dataCourses } from './data.js';
 
 const seriesTbody: HTMLElement = document.getElementById("series")!;
 
+const tarjetaContainer = document.getElementById("tarjetaContainer")!;
+
 renderCoursesInTable(dataCourses);
 calculateAndRenderAverage(dataCourses);
 
 function renderCoursesInTable(series: Serie[]): void {
-    let totalSeasons = 0;
     series.forEach(c => {
-        let trElement = document.createElement("tr");
-        trElement.innerHTML = `<td>${c.id}</td>
-                               <td>${c.name}</td>
-                               <td>${c.channel}</td>
-                               <td>${c.seasons}</td>`;
-        seriesTbody.appendChild(trElement);
-        totalSeasons += c.seasons;
+      let trElement = document.createElement("tr");
+      trElement.innerHTML = `<td>${c.id}</td>
+                            <td><a href="#${c.name}">${c.name}</a></td>
+                             <td>${c.channel}</td>
+                             <td>${c.seasons}</td>`;
+      seriesTbody.appendChild(trElement);
+  
+      trElement.addEventListener("click", () => mostrarImagen(c));
     });
-}
+  }
 
 function calculateAndRenderAverage(series: Serie[]): void {
     let totalSeasons = series.reduce((total, serie) => total + serie.seasons, 0);
@@ -28,3 +30,18 @@ function calculateAndRenderAverage(series: Serie[]): void {
                            <td>${averageSeasons.toFixed(2)}</td>`;
     seriesTbody.appendChild(trAverage);
 }
+
+function mostrarImagen(serie: Serie) {
+    const tarjetaHTML = `
+      <div class="card">
+        <div class="card-body">
+         <img src= "${serie.image}" style="height: 300px; width: 500px;>
+          <h5 class="card-title">${serie.name}</h5>
+          <p class="card-text"> ${serie.description}</p>
+          <a href="${serie.link}"> ${serie.link} </a>
+        </div>
+      </div>
+    `;
+  
+    tarjetaContainer.innerHTML = tarjetaHTML;
+  }
